@@ -7,24 +7,21 @@ class Program
 {
     public class Room
     {
-        //Name of the room
         public string Name { get; set; }
-
-        //Room description
         public string Description { get; set; }
-
-        //List of items (if any) in room
+        public string RoomExit { get; set; }
+        public string RoomExit2 { get; set; }
         public List<string> Items { get; set; }
-
-        //List of numer of exits in room
         public List<string> NumberOfExits { get; set; }
 
         public Dictionary<string, Room> Exits { get; set; }
 
-        public Room(string name, string description)
+        public Room(string name, string description, string roomExit, string roomExit2)
         {
             Name = name;
             Description = description;
+            RoomExit = roomExit;
+            RoomExit2 = roomExit2;
 
             Exits = new Dictionary<string, Room>();
             Items = new List<string>();
@@ -32,12 +29,16 @@ class Program
         }
 
         // Adds an exit from this room to another
-        public void AddExit(string direction, Room targetRoom)
+        public string AddExit(string direction, Room targetRoom)
         {
             Exits[direction.ToLower()] = targetRoom;
 
             NumberOfExits.Add(direction);
+
+            //Note: don't need a return value, change method return to void            
+            return "";
         }
+
     }//End of class Room
 
 
@@ -68,7 +69,6 @@ class Program
             }
             else if (direction == "look")
             {
-                //Verbs prolly shouldn't be part of Move method or simply rename it to something like PlayerAction
                 Console.WriteLine($"{CurrentRoom.Name}\n");
                 Console.WriteLine(CurrentRoom.Description);
 
@@ -96,28 +96,27 @@ class Program
     }//End of class Player
 
     //instantiate rooms
-    static Room bridge = new Room("Bridge", "The control panels blink in a rhythmic pattern. You're on the bridge of your ship.");
-    static Room dockingBay = new Room("Docking Bay", "You're in the docking bay. There's a shuttle here.");
-    static Room storageRoom = new Room("Storage Room", "Crates and boxes fill this storage room. It's dimly lit.");
+    static Room bridge = new Room("Bridge", "The control panels blink in a rhythmic pattern. You're on the bridge of your ship.", "", "");
+    static Room dockingBay = new Room("Docking Bay", "You're in the docking bay. There's a shuttle here.", "", "");
+    static Room storageRoom = new Room("Storage Room", "Crates and boxes fill this storage room. It's dimly lit.", "", "");
 
     //Instantiate Player        
     static Player player = new Player(bridge);
 
     static public void Initialize()
     {
-        //Less chance of accidentally writing directions wrong         
         const string north = "north";
         const string south = "south";
         const string east = "east";
         const string west = "west";
 
         // Connecting rooms 
-        dockingBay.AddExit(south, bridge);
-        storageRoom.AddExit(north, bridge);
+        dockingBay.RoomExit = dockingBay.AddExit(south, bridge);
+        storageRoom.RoomExit = storageRoom.AddExit(north, bridge);
 
         //Bridge room has two exits
-        bridge.AddExit(south, storageRoom);
-        bridge.AddExit(north, dockingBay);
+        bridge.RoomExit = bridge.AddExit(south, storageRoom);
+        bridge.RoomExit2 = bridge.AddExit(north, dockingBay);
 
         //Add items to rooms
         bridge.Items.Add("a keycard");
@@ -133,7 +132,7 @@ class Program
 
     static public void DisplayExits(Room CurrentRoom)
     {
-        //check number of exits for CurrentRoom (the room the player is in)       
+        //check number of exits        
         string ExitsList = "";
 
         for (int i = 0; i < CurrentRoom.NumberOfExits.Count; i++)
@@ -159,8 +158,6 @@ class Program
         {
             Console.WriteLine(player.CurrentRoom.Items[i]);
         }
-
-        //Add some space after item iteration
         Console.WriteLine();
     }
 
@@ -173,20 +170,24 @@ class Program
 
         while (true)
         {
-            //Prolly add some more descriptive text here, lol!            
+            //describe starting room instead of just "Which way?"
+            //the first time. After that Player will supply room descriptions
             if (!gameStarted)
             {
                 Console.WriteLine("Hello there, stranger. Why not have a 'look' around?");
+
                 gameStarted = true;
             }
 
             Console.WriteLine("What now?");
             string input = Console.ReadLine().Trim().ToLower();
 
-            //Break loop if user inputs 'quit' or 'exit'
+
             if (input == "quit" || input == "exit") break;
 
             player.Move(input);
         }
-    }//End of Main
-}//End of Program class
+
+    }
+
+}
