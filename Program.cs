@@ -54,11 +54,21 @@ class Program
                 Console.WriteLine($"You move {direction} and enter {CurrentRoom.Name}.\n");
                 Console.WriteLine(CurrentRoom.Description);
 
-                //iterate items in room
-                for (int i = 0; i < CurrentRoom.Items.Count(); i++)
-                {
-                    Console.WriteLine($"You see:  {CurrentRoom.Items[i]}");
-                }
+                IterateItems();
+                // //iterate items in room
+                // for (int i = 0; i < CurrentRoom.Items.Count(); i++)
+                // {
+                //     Console.WriteLine($"You see:  {CurrentRoom.Items[i]}");
+                // }
+
+                Console.WriteLine(CurrentRoom.RoomExit);
+                Console.WriteLine(CurrentRoom.RoomExit2);
+            }
+            else if (direction == "look")
+            {
+                Console.WriteLine(CurrentRoom.Description);
+
+                IterateItems();
 
                 Console.WriteLine(CurrentRoom.RoomExit);
                 Console.WriteLine(CurrentRoom.RoomExit2);
@@ -68,13 +78,14 @@ class Program
                 Console.WriteLine("You can't go that way.");
 
             }
+
         }
     }//End of class Player
 
     //instantiate rooms
-    static Room bridge = new Room("The Bridge", "The control panels blink in a rhythmic pattern. You're on the bridge of your ship.", "", "");
-    static Room dockingBay = new Room("The Docking Bay", "You're in the docking bay. There's a shuttle here.", "", "");
-    static Room storageRoom = new Room("A Storage Room", "Crates and boxes fill this storage room. It's dimly lit.", "", "");
+    static Room bridge = new Room("the Bridge", "The control panels blink in a rhythmic pattern. You're on the bridge of your ship.", "", "");
+    static Room dockingBay = new Room("the Docking Bay", "You're in the docking bay. There's a shuttle here.", "", "");
+    static Room storageRoom = new Room("a Storage Room", "Crates and boxes fill this storage room. It's dimly lit.", "", "");
 
     //Instantiate Player        
     static Player player = new Player(bridge);
@@ -128,11 +139,6 @@ class Program
                 Console.WriteLine(player.CurrentRoom.Description);
 
                 IterateItems();
-                // //iterate items in room
-                // for (int i = 0; i < player.CurrentRoom.Items.Count(); i++)
-                // {
-                //     Console.WriteLine($"You see: {player.CurrentRoom.Items[i]}");
-                // }
 
                 Console.WriteLine(player.CurrentRoom.RoomExit);
                 Console.WriteLine(player.CurrentRoom.RoomExit2);
@@ -141,15 +147,6 @@ class Program
             Console.WriteLine("What now?");
             string input = Console.ReadLine().Trim().ToLower();
 
-            //if (input=="get" && player.CurrentRoom.Item!=null)
-            if (input == "look")
-            {
-                Console.WriteLine($"{player.CurrentRoom.Name}\n");
-                Console.WriteLine(player.CurrentRoom.Description);
-                //don't forget items
-                Console.WriteLine(player.CurrentRoom.RoomExit);
-                Console.WriteLine(player.CurrentRoom.RoomExit2);
-            }
 
             if (input == "quit" || input == "exit") break;
 
