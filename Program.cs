@@ -24,7 +24,6 @@ class Program
 
             Exits = new Dictionary<string, Room>();
             Items = new List<string>();
-            //List<string> Items = new List<string>();
         }
 
         // Adds an exit from this room to another
@@ -73,34 +72,50 @@ class Program
     }//End of class Player
 
     //instantiate rooms
-    static Room bridge = new Room("Bridge", "The control panels blink in a rhythmic pattern. You're on the bridge of your ship.", "", "");
-    static Room dockingBay = new Room("Docking Bay", "You're in the docking bay. There's a shuttle here.", "", "");
-    static Room storageRoom = new Room("Storage Room", "Crates and boxes fill this storage room. It's dimly lit.", "", "");
+    static Room bridge = new Room("The Bridge", "The control panels blink in a rhythmic pattern. You're on the bridge of your ship.", "", "");
+    static Room dockingBay = new Room("The Docking Bay", "You're in the docking bay. There's a shuttle here.", "", "");
+    static Room storageRoom = new Room("A Storage Room", "Crates and boxes fill this storage room. It's dimly lit.", "", "");
 
     //Instantiate Player        
     static Player player = new Player(bridge);
 
     static public void Initialize()
     {
+        const string north = "north";
+        const string south = "south";
+        const string east = "east";
+        const string west = "west";
+
         // Connecting rooms 
-        dockingBay.RoomExit = dockingBay.AddExit("south", bridge);
-        storageRoom.RoomExit = storageRoom.AddExit("north", bridge);
+        dockingBay.RoomExit = dockingBay.AddExit(south, bridge);
+        storageRoom.RoomExit = storageRoom.AddExit(north, bridge);
 
         //Bridge room has two exits
-        bridge.RoomExit = bridge.AddExit("south", storageRoom);
-        bridge.RoomExit2 = bridge.AddExit("north", dockingBay);
+        bridge.RoomExit = bridge.AddExit(south, storageRoom);
+        bridge.RoomExit2 = bridge.AddExit(north, dockingBay);
 
         //add items to rooms
         bridge.Items.Add("a keycard");
         bridge.Items.Add("an old newspaper");
         dockingBay.Items.Add("a DL-44 Blaster");
         storageRoom.Items.Add("a broom");
+        storageRoom.Items.Add("a bucket");
+    }
+
+    static public void IterateItems()
+    {
+        //iterate items in room
+        for (int i = 0; i < player.CurrentRoom.Items.Count(); i++)
+        {
+            Console.WriteLine($"You see: {player.CurrentRoom.Items[i]}");
+        }
     }
 
     static void Main(string[] args)
     {
         bool gameStarted = false;
 
+        //Call method
         Initialize();
 
         while (true)
@@ -109,14 +124,15 @@ class Program
             //the first time. After that Player will supply room descriptions
             if (!gameStarted)
             {
-                Console.WriteLine(player.CurrentRoom.Name);
+                Console.WriteLine($"{player.CurrentRoom.Name}\n");
                 Console.WriteLine(player.CurrentRoom.Description);
 
-                //iterate items in room
-                for (int i = 0; i < player.CurrentRoom.Items.Count(); i++)
-                {
-                    Console.WriteLine($"You see: {player.CurrentRoom.Items[i]}");
-                }
+                IterateItems();
+                // //iterate items in room
+                // for (int i = 0; i < player.CurrentRoom.Items.Count(); i++)
+                // {
+                //     Console.WriteLine($"You see: {player.CurrentRoom.Items[i]}");
+                // }
 
                 Console.WriteLine(player.CurrentRoom.RoomExit);
                 Console.WriteLine(player.CurrentRoom.RoomExit2);
@@ -128,7 +144,7 @@ class Program
             //if (input=="get" && player.CurrentRoom.Item!=null)
             if (input == "look")
             {
-                Console.WriteLine(player.CurrentRoom.Name);
+                Console.WriteLine($"{player.CurrentRoom.Name}\n");
                 Console.WriteLine(player.CurrentRoom.Description);
                 //don't forget items
                 Console.WriteLine(player.CurrentRoom.RoomExit);
