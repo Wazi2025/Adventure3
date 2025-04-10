@@ -266,8 +266,8 @@ class Program
             //Break loop if user inputs 'quit' or 'exit'
             if (input == "quit" || input == "exit") break;
 
-            //if (player.Inventory.Count == items)
-            if (player.Inventory.Count == 1) //testing
+            if (player.Inventory.Count == items)
+            //if (player.Inventory.Count == 1) //testing
             {
                 Console.WriteLine($"Congratulations! You managed to collect {player.Inventory.Count} of {items} items. An amazing performance!\n");
                 Console.WriteLine(winner);
