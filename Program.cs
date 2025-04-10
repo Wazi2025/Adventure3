@@ -272,6 +272,7 @@ class Program
                 Console.WriteLine($"Congratulations! You managed to collect {player.Inventory.Count} of {items} items. An amazing performance!\n");
                 Console.WriteLine(winner);
 
+                //Add some "animation" ;-)
                 foreach (char c in winner)
                 {
                     Console.Write(c);
