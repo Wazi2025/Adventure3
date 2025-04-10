@@ -49,7 +49,6 @@ class Program
         public const string look = "look";
         const string get = "get";
         const string inv = "inv";
-        public int allItemsPickedUp = 0;
 
         public Player(Room startRoom)
         {
@@ -129,8 +128,8 @@ class Program
         storageRoom.Items.Add("bucket");
 
         //Add items to player inventory
-        player.Inventory.Add("some pocket lint");
-        player.Inventory.Add("a perfectly ordinary babel fish");
+        // player.Inventory.Add("some pocket lint");
+        // player.Inventory.Add("a perfectly ordinary babel fish");
 
         //return all items in all rooms so we can use it in Main in the ending message
         return bridge.Items.Count + dockingBay.Items.Count + storageRoom.Items.Count;
@@ -223,7 +222,6 @@ class Program
 
                 Console.WriteLine($"You pick up {tempItem}.");
                 itemFound = true;
-                player.allItemsPickedUp += 1;
                 break;
             }
         }
@@ -268,11 +266,17 @@ class Program
             //Break loop if user inputs 'quit' or 'exit'
             if (input == "quit" || input == "exit") break;
 
-            if (player.allItemsPickedUp == items)
-            //if (player.allItemsPickedUp == 1) //testing
+            //if (player.Inventory.Count == items)
+            if (player.Inventory.Count == 1) //testing
             {
-                Console.WriteLine($"Congratulations! You managed to collect {player.allItemsPickedUp} of {items} items. An amazing performance!\n");
+                Console.WriteLine($"Congratulations! You managed to collect {player.Inventory.Count} of {items} items. An amazing performance!\n");
                 Console.WriteLine(winner);
+
+                foreach (char c in winner)
+                {
+                    Console.Write(c);
+                    Thread.Sleep(1);
+                }
                 break;
             }
 
