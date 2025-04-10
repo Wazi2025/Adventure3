@@ -180,12 +180,11 @@ class Program
         {
             //Split player input based using blank space as a marker
             //Note: This means that currently this routine only accepts 1 blank space, i.e. "old newspaper" will fail
-            //Preserve item name capitalization for pickup/inventory
 
-            // string tempItem = direction;
-            // string ItemAsIs = tempItem;
             int itemIndex = direction.IndexOf(" ");
-            string tempItem = direction.Substring(itemIndex + 1);
+
+            //remove any whitespace
+            string tempItem = direction.Substring(itemIndex).Trim();
 
             //Extract the word from index 0 to before the blank space, in this case it's 'get'.
             //We don't currently use it but might later on
