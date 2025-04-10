@@ -55,9 +55,9 @@ class Program
         public void Move(string direction)
         {
 
-            if (CurrentRoom.Exits.ContainsKey(direction.ToLower()))
+            if (CurrentRoom.Exits.ContainsKey(direction))
             {
-                CurrentRoom = CurrentRoom.Exits[direction.ToLower()];
+                CurrentRoom = CurrentRoom.Exits[direction];
                 Console.WriteLine($"You move {direction} and enter the {CurrentRoom.Name}.\n");
                 Console.WriteLine(CurrentRoom.Description);
 
@@ -83,34 +83,13 @@ class Program
             }
             else if (direction.Contains("get"))
             {
-                //Note: should be in its own method
-
-                for (int i = 0; i < CurrentRoom.Items.Count; i++)
-                {
-                    //Player can pickup any item in CurrentRoom's itemlist
-
-                    //Split player input based using blank space as a marker
-                    int itemIndex = direction.IndexOf(" ");
-                    string tempItem = direction.Substring(itemIndex + 1);
-
-                    //Extract the word index 0 to before the blank space, in this case it's 'get'.
-                    //We don't currently use it but might later on
-                    string get = direction.Substring(0, itemIndex);
-
-                    //if player input word is the same as an item in CurrentRoom
-                    //we add this item to inventory and remove it from CurrentRoom's itemlist
-                    if (tempItem == CurrentRoom.Items[i])
-                    {
-                        player.Inventory.Add(CurrentRoom.Items[i]);
-                        CurrentRoom.Items[i] = null;
-                    }
-                }
+                //Call method
+                GetItem(direction);
             }
             else
             {
                 Console.WriteLine("You can't go that way.");
             }
-
         }
     }//End of class Player
 
@@ -140,8 +119,8 @@ class Program
 
         //Add items to rooms
         bridge.Items.Add("keycard");
-        bridge.Items.Add("old newspaper");
-        dockingBay.Items.Add("DL-44 Blaster");
+        bridge.Items.Add("newspaper");
+        dockingBay.Items.Add("Blaster");
         storageRoom.Items.Add("broom");
         storageRoom.Items.Add("bucket");
 
@@ -185,8 +164,7 @@ class Program
 
     static public void ShowInventory()
     {
-        //Show player's inventory
-        //Note: should be in its own method
+        //Show player's inventory        
         Console.WriteLine("You have: ");
         for (int i = 0; i < player.Inventory.Count(); i++)
         {
@@ -195,6 +173,41 @@ class Program
         Console.WriteLine();
     }
 
+    static public void GetItem(string direction)
+    {
+        //Player can pickup any item in CurrentRoom's itemlist
+        for (int i = 0; i < player.CurrentRoom.Items.Count; i++)
+        {
+            //Split player input based using blank space as a marker
+            //Note: This means that currently this routine only accepts 1 blank space, i.e. "old newspaper" will fail
+            //Preserve item name capitalization for pickup/inventory
+
+            // string tempItem = direction;
+            // string ItemAsIs = tempItem;
+            int itemIndex = direction.IndexOf(" ");
+            string tempItem = direction.Substring(itemIndex + 1);
+
+            //Extract the word from index 0 to before the blank space, in this case it's 'get'.
+            //We don't currently use it but might later on
+            string get = direction.Substring(0, itemIndex);
+
+            //if player input word is the same as an item in CurrentRoom
+            //we add this item to inventory and remove it from CurrentRoom's itemlist
+            if (tempItem.ToLower() == player.CurrentRoom.Items[i].ToLower())
+            {
+                player.Inventory.Add(player.CurrentRoom.Items[i]);
+                player.CurrentRoom.Items[i] = "";
+                Console.WriteLine($"You pick up {tempItem}.");
+            }
+            //Note: implement some way of searching through CurrentRoom's itemlist
+            //and inform user if item doesn't exist
+            // else if (!player.CurrentRoom.Items.Contains(tempItem))
+            // {
+            //     Console.WriteLine($"{tempItem} is not an item!");
+            // }
+
+        }
+    }
     static void Main(string[] args)
     {
         bool gameStarted = false;
@@ -212,7 +225,8 @@ class Program
             }
 
             Console.WriteLine("What now?");
-            string input = Console.ReadLine().Trim().ToLower();
+            //string input = Console.ReadLine().Trim().ToLower();
+            string input = Console.ReadLine().ToLower();
 
             //Break loop if user inputs 'quit' or 'exit'
             if (input == "quit" || input == "exit") break;
