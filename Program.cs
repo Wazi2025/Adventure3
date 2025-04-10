@@ -7,6 +7,7 @@ class Program
 {
     public class Room
     {
+        public int allItems = 0;
         //Name of the room
         public string Name { get; set; }
 
@@ -32,11 +33,11 @@ class Program
         }
 
         // Adds an exit from this room to another
-        public void AddExit(string direction, Room targetRoom)
+        public void AddExit(string playerAction, Room targetRoom)
         {
-            Exits[direction.ToLower()] = targetRoom;
+            Exits[playerAction.ToLower()] = targetRoom;
 
-            NumberOfExits.Add(direction);
+            NumberOfExits.Add(playerAction);
         }
     }//End of class Room
 
@@ -45,6 +46,10 @@ class Program
     {
         public List<string> Inventory { get; set; }
         public Room CurrentRoom { get; set; }
+        public const string look = "look";
+        const string get = "get";
+        const string inv = "inv";
+        public int allItemsPickedUp = 0;
 
         public Player(Room startRoom)
         {
@@ -52,13 +57,13 @@ class Program
             CurrentRoom = startRoom;
         }
 
-        public void Move(string direction)
+        public void Action(string playerAction)
         {
 
-            if (CurrentRoom.Exits.ContainsKey(direction))
+            if (CurrentRoom.Exits.ContainsKey(playerAction))
             {
-                CurrentRoom = CurrentRoom.Exits[direction];
-                Console.WriteLine($"You move {direction} and enter the {CurrentRoom.Name}.\n");
+                CurrentRoom = CurrentRoom.Exits[playerAction];
+                Console.WriteLine($"You move {playerAction} and enter the {CurrentRoom.Name}.\n");
                 Console.WriteLine(CurrentRoom.Description);
 
                 //Call methods
@@ -66,9 +71,8 @@ class Program
                 DisplayExits(CurrentRoom);
 
             }
-            else if (direction == "look")
+            else if (playerAction == look)
             {
-                //Verbs prolly shouldn't be part of Move method or simply rename it to something like PlayerAction
                 Console.WriteLine($"{CurrentRoom.Name}\n");
                 Console.WriteLine(CurrentRoom.Description);
 
@@ -76,15 +80,15 @@ class Program
                 IterateItems();
                 DisplayExits(CurrentRoom);
             }
-            else if (direction == "inv")
+            else if (playerAction == inv)
             {
                 //Call method
                 ShowInventory();
             }
-            else if (direction.Contains("get"))
+            else if (playerAction.Contains(get))
             {
                 //Call method
-                GetItem(direction);
+                GetItem(playerAction);
             }
             else
             {
@@ -101,13 +105,14 @@ class Program
     //Instantiate Player        
     static Player player = new Player(bridge);
 
-    static public void Initialize()
+    static public int Initialize()
     {
-        //Less chance of accidentally writing directions wrong         
+        //Less chance of accidentally writing playerActions wrong         
         const string north = "north";
         const string south = "south";
         const string east = "east";
         const string west = "west";
+        int allItems;
 
         // Connecting rooms 
         dockingBay.AddExit(south, bridge);
@@ -124,9 +129,13 @@ class Program
         storageRoom.Items.Add("broom");
         storageRoom.Items.Add("bucket");
 
+        allItems = bridge.Items.Count + dockingBay.Items.Count + storageRoom.Items.Count;
+
         //Add items to player inventory
         player.Inventory.Add("some pocket lint");
-        player.Inventory.Add("a perfectly ordinary ballpen");
+        player.Inventory.Add("a perfectly ordinary babel fish");
+
+        return allItems;
     }
 
     static public void DisplayExits(Room CurrentRoom)
@@ -173,11 +182,12 @@ class Program
         Console.WriteLine();
     }
 
-    static public void GetItem(string direction)
+    static public void GetItem(string playerAction)
     {
         bool itemFound = false;
         bool missingItem = false;
         string tempItem = "";
+        //int allItemsPickedUp = 0;
 
         //Player can pickup any item in CurrentRoom's itemlist
         for (int i = 0; i < player.CurrentRoom.Items.Count; i++)
@@ -188,8 +198,8 @@ class Program
             //
             //Check if blank space (" ") can actually be found in the input string
             //or else we would get an ArgumentOutOfRangeException when assigning itemIndex
-            if (direction.IndexOf(" ")! > -1)
-                itemIndex = direction.IndexOf(" ");
+            if (playerAction.IndexOf(" ")! > -1)
+                itemIndex = playerAction.IndexOf(" ");
             else
             {
                 //inform user if input is missing a string (or item in this case). e.g. 'get card'/get keycard
@@ -199,11 +209,11 @@ class Program
             }
 
             //remove any whitespace
-            tempItem = direction.Substring(itemIndex).Trim();
+            tempItem = playerAction.Substring(itemIndex).Trim();
 
             //Extract the word from index 0 to before the blank space, in this case it's 'get'.
             //We don't currently use it but might later on
-            string get = direction.Substring(0, itemIndex);
+            string get = playerAction.Substring(0, itemIndex);
 
             //if player input word is the same as an item in CurrentRoom
             //we add this item to inventory and remove it from CurrentRoom's itemlist
@@ -216,6 +226,7 @@ class Program
 
                 Console.WriteLine($"You pick up {tempItem}.");
                 itemFound = true;
+                player.allItemsPickedUp += 1;
                 break;
             }
         }
@@ -227,9 +238,23 @@ class Program
     static void Main(string[] args)
     {
         bool gameStarted = false;
+        int items;
+        string winner = @"                                                                                                                                                                            
+                                                                                                                                                                               
+      ___    ___ ________  ___  ___          ________  ________  _______           ________  ________  ___  ___       ___       ___  ________  ________   _________  ___       
+     |\  \  /  /|\   __  \|\  \|\  \        |\   __  \|\   __  \|\  ___ \         |\   __  \|\   __  \|\  \|\  \     |\  \     |\  \|\   __  \|\   ___  \|\___   ___\\  \      
+     \ \  \/  / | \  \|\  \ \  \\\  \       \ \  \|\  \ \  \|\  \ \   __/|        \ \  \|\ /\ \  \|\  \ \  \ \  \    \ \  \    \ \  \ \  \|\  \ \  \\ \  \|___ \  \_\ \  \     
+      \ \    / / \ \  \\\  \ \  \\\  \       \ \   __  \ \   _  _\ \  \_|/__       \ \   __  \ \   _  _\ \  \ \  \    \ \  \    \ \  \ \   __  \ \  \\ \  \   \ \  \ \ \  \    
+       \/  /  /   \ \  \\\  \ \  \\\  \       \ \  \ \  \ \  \\  \\ \  \_|\ \       \ \  \|\  \ \  \\  \\ \  \ \  \____\ \  \____\ \  \ \  \ \  \ \  \\ \  \   \ \  \ \ \__\   
+     __/  / /      \ \_______\ \_______\       \ \__\ \__\ \__\\ _\\ \_______\       \ \_______\ \__\\ _\\ \__\ \_______\ \_______\ \__\ \__\ \__\ \__\\ \__\   \ \__\ \|__|   
+    |\___/ /        \|_______|\|_______|        \|__|\|__|\|__|\|__|\|_______|        \|_______|\|__|\|__|\|__|\|_______|\|_______|\|__|\|__|\|__|\|__| \|__|    \|__|     ___ 
+    \|___|/                                                                                                                                                               |\__\
+                                                                                                                                                                          \|__|
+                                                                                                                                                                               ";
 
         //Call method
-        Initialize();
+        //items is all items in all rooms combined
+        items = Initialize();
 
         while (true)
         {
@@ -241,13 +266,20 @@ class Program
             }
 
             Console.WriteLine("What now?");
-            //string input = Console.ReadLine().Trim().ToLower();
-            string input = Console.ReadLine().ToLower();
+            string input = Console.ReadLine().Trim().ToLower();
 
             //Break loop if user inputs 'quit' or 'exit'
             if (input == "quit" || input == "exit") break;
 
-            player.Move(input);
+            if (player.allItemsPickedUp == items)
+            //if (player.allItemsPickedUp == 1) //testing
+            {
+                Console.WriteLine($"Congratulations! You managed to collect {player.allItemsPickedUp} of {items} items. An amazing performance!\n");
+                Console.WriteLine(winner);
+                break;
+            }
+
+            player.Action(input);
         }
     }//End of Main
 }//End of Program class
