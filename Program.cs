@@ -175,16 +175,31 @@ class Program
 
     static public void GetItem(string direction)
     {
+        bool itemFound = false;
+        bool missingItem = false;
+        string tempItem = "";
+
         //Player can pickup any item in CurrentRoom's itemlist
         for (int i = 0; i < player.CurrentRoom.Items.Count; i++)
         {
-            //Split player input based using blank space as a marker
+            int itemIndex = 0;
+            //Split player input based on using blank space(" ") as a marker
             //Note: This means that currently this routine only accepts 1 blank space, i.e. "old newspaper" will fail
-
-            int itemIndex = direction.IndexOf(" ");
+            //
+            //Check if blank space (" ") can actually be found in the input string
+            //or else we would get an ArgumentOutOfRangeException when assigning itemIndex
+            if (direction.IndexOf(" ")! > -1)
+                itemIndex = direction.IndexOf(" ");
+            else
+            {
+                //inform user if input is missing a string (or item in this case). e.g. 'get card'/get keycard
+                Console.WriteLine("What do you want to get?");
+                missingItem = true;
+                break;
+            }
 
             //remove any whitespace
-            string tempItem = direction.Substring(itemIndex).Trim();
+            tempItem = direction.Substring(itemIndex).Trim();
 
             //Extract the word from index 0 to before the blank space, in this case it's 'get'.
             //We don't currently use it but might later on
@@ -195,17 +210,19 @@ class Program
             if (tempItem.ToLower() == player.CurrentRoom.Items[i].ToLower())
             {
                 player.Inventory.Add(player.CurrentRoom.Items[i]);
-                player.CurrentRoom.Items[i] = "";
-                Console.WriteLine($"You pick up {tempItem}.");
-            }
-            //Note: implement some way of searching through CurrentRoom's itemlist
-            //and inform user if item doesn't exist
-            // else if (!player.CurrentRoom.Items.Contains(tempItem))
-            // {
-            //     Console.WriteLine($"{tempItem} is not an item!");
-            // }
 
+                //Remove item from CurrentRoom's itemlist
+                player.CurrentRoom.Items.RemoveAt(i);
+
+                Console.WriteLine($"You pick up {tempItem}.");
+                itemFound = true;
+                break;
+            }
         }
+
+        //Inform user if item is not in CurrentRoom's itemlist
+        if (!itemFound && missingItem == false)
+            Console.WriteLine($"There is no '{tempItem}' to pick up!");
     }
     static void Main(string[] args)
     {
