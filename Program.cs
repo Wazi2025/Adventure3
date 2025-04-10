@@ -17,7 +17,7 @@ class Program
         //List of items (if any) in room
         public List<string> Items { get; set; }
 
-        //List of numer of exits in room
+        //List of number of exits in room
         public List<string> NumberOfExits { get; set; }
 
         public Dictionary<string, Room> Exits { get; set; }
@@ -112,7 +112,6 @@ class Program
         const string south = "south";
         const string east = "east";
         const string west = "west";
-        int allItems;
 
         // Connecting rooms 
         dockingBay.AddExit(south, bridge);
@@ -129,13 +128,12 @@ class Program
         storageRoom.Items.Add("broom");
         storageRoom.Items.Add("bucket");
 
-        allItems = bridge.Items.Count + dockingBay.Items.Count + storageRoom.Items.Count;
-
         //Add items to player inventory
         player.Inventory.Add("some pocket lint");
         player.Inventory.Add("a perfectly ordinary babel fish");
 
-        return allItems;
+        //return all items in all rooms so we can use it in Main in the ending message
+        return bridge.Items.Count + dockingBay.Items.Count + storageRoom.Items.Count;
     }
 
     static public void DisplayExits(Room CurrentRoom)
@@ -187,7 +185,6 @@ class Program
         bool itemFound = false;
         bool missingItem = false;
         string tempItem = "";
-        //int allItemsPickedUp = 0;
 
         //Player can pickup any item in CurrentRoom's itemlist
         for (int i = 0; i < player.CurrentRoom.Items.Count; i++)
@@ -253,7 +250,7 @@ class Program
                                                                                                                                                                                ";
 
         //Call method
-        //items is all items in all rooms combined
+        //items is all items in all rooms combined from Initialize method
         items = Initialize();
 
         while (true)
