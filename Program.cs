@@ -151,7 +151,7 @@ class Program
                 ExitsList += "\n" + CurrentRoom.NumberOfExits[i];
             }
         }
-        Console.WriteLine($"There are exit(s): {ExitsList}");
+        Console.WriteLine($"There are exit(s): {ExitsList}\n");
     }
 
     static public void IterateItems()
@@ -220,7 +220,7 @@ class Program
                 //Remove item from CurrentRoom's itemlist
                 player.CurrentRoom.Items.RemoveAt(i);
 
-                Console.WriteLine($"You pick up {tempItem}.");
+                Console.WriteLine($"You pick up {tempItem}.\n");
                 itemFound = true;
                 break;
             }
@@ -228,7 +228,7 @@ class Program
 
         //Inform user if item is not in CurrentRoom's itemlist
         if (!itemFound && missingItem == false)
-            Console.WriteLine($"There is no '{tempItem}' to pick up!");
+            Console.WriteLine($"There is no '{tempItem}' to pick up!\n");
     }
     static void Main(string[] args)
     {
@@ -269,16 +269,22 @@ class Program
             if (player.Inventory.Count == items)
             //if (player.Inventory.Count == 1) //testing
             {
+                string winner2 = $"Congratulations! You managed to collect {player.Inventory.Count} of {items} items. An amazing performance!\n";
                 Console.WriteLine($"Congratulations! You managed to collect {player.Inventory.Count} of {items} items. An amazing performance!\n");
                 Console.WriteLine(winner);
 
                 //Add some "animation" ;-)
-                foreach (char c in winner)
+                foreach (char c in winner2)
                 {
                     Console.Write(c);
-                    Thread.Sleep(1);
+                    Thread.Sleep(20);
                 }
+                //break;
+                //keep CLI open until user presses any key
+                Console.WriteLine("\nPress any key to exit...");
+                Console.ReadKey();
                 break;
+
             }
 
             player.Action(input);
