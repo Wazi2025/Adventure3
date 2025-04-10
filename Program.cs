@@ -78,14 +78,33 @@ class Program
             }
             else if (direction == "inv")
             {
-                //Show player's inventory
+                //Call method
+                ShowInventory();
+            }
+            else if (direction.Contains("get"))
+            {
                 //Note: should be in its own method
-                Console.WriteLine("You have: ");
-                for (int i = 0; i < player.Inventory.Count(); i++)
+
+                for (int i = 0; i < CurrentRoom.Items.Count; i++)
                 {
-                    Console.WriteLine($"- {player.Inventory[i]}");
+                    //Player can pickup any item in CurrentRoom's itemlist
+
+                    //Split player input based using blank space as a marker
+                    int itemIndex = direction.IndexOf(" ");
+                    string tempItem = direction.Substring(itemIndex + 1);
+
+                    //Extract the word index 0 to before the blank space, in this case it's 'get'.
+                    //We don't currently use it but might later on
+                    string get = direction.Substring(0, itemIndex);
+
+                    //if player input word is the same as an item in CurrentRoom
+                    //we add this item to inventory and remove it from CurrentRoom's itemlist
+                    if (tempItem == CurrentRoom.Items[i])
+                    {
+                        player.Inventory.Add(CurrentRoom.Items[i]);
+                        CurrentRoom.Items[i] = null;
+                    }
                 }
-                Console.WriteLine();
             }
             else
             {
@@ -120,11 +139,11 @@ class Program
         bridge.AddExit(north, dockingBay);
 
         //Add items to rooms
-        bridge.Items.Add("a keycard");
-        bridge.Items.Add("an old newspaper");
-        dockingBay.Items.Add("a DL-44 Blaster");
-        storageRoom.Items.Add("a broom");
-        storageRoom.Items.Add("a bucket");
+        bridge.Items.Add("keycard");
+        bridge.Items.Add("old newspaper");
+        dockingBay.Items.Add("DL-44 Blaster");
+        storageRoom.Items.Add("broom");
+        storageRoom.Items.Add("bucket");
 
         //Add items to player inventory
         player.Inventory.Add("some pocket lint");
@@ -161,6 +180,18 @@ class Program
         }
 
         //Add some space after item iteration
+        Console.WriteLine();
+    }
+
+    static public void ShowInventory()
+    {
+        //Show player's inventory
+        //Note: should be in its own method
+        Console.WriteLine("You have: ");
+        for (int i = 0; i < player.Inventory.Count(); i++)
+        {
+            Console.WriteLine($"- {player.Inventory[i]}");
+        }
         Console.WriteLine();
     }
 
