@@ -270,7 +270,7 @@ class Program
             //if (player.Inventory.Count == 1) //testing
             {
                 string winner2 = $"Congratulations! You managed to collect {player.Inventory.Count} of {items} items. An amazing performance!\n";
-                Console.WriteLine($"Congratulations! You managed to collect {player.Inventory.Count} of {items} items. An amazing performance!\n");
+                //Console.WriteLine($"Congratulations! You managed to collect {player.Inventory.Count} of {items} items. An amazing performance!\n");
                 Console.WriteLine(winner);
 
                 //Add some "animation" ;-)
