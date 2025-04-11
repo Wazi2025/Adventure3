@@ -1,6 +1,11 @@
-﻿using System.ComponentModel.Design;
-using System.IO.Pipelines;
-using System.Runtime.CompilerServices;
+﻿// using System.ComponentModel.Design;
+// using System.IO.Pipelines;
+// using System.Runtime.CompilerServices;
+using System;
+using System.Diagnostics;
+using System.ComponentModel;
+using System.IO;
+using System.Threading;
 
 namespace Adventure3;
 
@@ -48,13 +53,15 @@ class Program
         public List<string> Inventory { get; set; }
         public Room CurrentRoom { get; set; }
         public const string look = "look";
-        const string get = "get";
-        const string inv = "i";
-        const string help = "help";
+        public const string get = "get";
+        public const string inv = "i";
+        public const string help = "help";
         public const string north = "north";
         public const string south = "south";
         public const string east = "east";
         public const string west = "west";
+        public const string exit = "exit";
+        public const string quit = "quit";
 
         public Player(Room startRoom)
         {
@@ -252,6 +259,7 @@ class Program
     }
     static void Main(string[] args)
     {
+        string imagePath = @"C:\Users\Instruktor\Desktop\CSharp\Adventure3\gfx\hhg.png";
         bool gameStarted = false;
         int items;
         string winner = @"                                                                                                                                                                            
@@ -271,8 +279,15 @@ class Program
         //items is all items in all rooms combined from Initialize method
         items = Initialize();
 
+        // Start the process (open image with the default viewer)
+        Process imageViewerProcess = Process.Start(new ProcessStartInfo(imagePath) { UseShellExecute = true });
+
+
         while (true)
         {
+
+            //Process.Start(new ProcessStartInfo(imagePath) { UseShellExecute = true });
+
             //Prolly add some more descriptive text here, lol!            
             if (!gameStarted)
             {
@@ -284,7 +299,13 @@ class Program
             string input = Console.ReadLine().Trim().ToLower();
 
             //Break loop if user inputs 'quit' or 'exit'
-            if (input == "quit" || input == "exit") break;
+            if (input == Player.exit || input == Player.quit)
+            {
+                //if (!imageViewerProcess.HasExited)
+                //Note: The process doesn't seem to close. Look into why.
+                imageViewerProcess.Kill();
+                break;
+            }
 
             if (player.Inventory.Count == items)
             //if (player.Inventory.Count == 1) //testing
