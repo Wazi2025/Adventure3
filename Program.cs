@@ -302,8 +302,9 @@ class Program
             if (input == Player.exit || input == Player.quit)
             {
                 //if (!imageViewerProcess.HasExited)
-                //Note: The process doesn't seem to close. Look into why.
+                //Note: The process doesn't seem to close/closes intermittently. Look into why.
                 imageViewerProcess.Kill();
+                Console.WriteLine($"The process {imageViewerProcess.ProcessName} has been killed");
                 break;
             }
 
