@@ -1,4 +1,5 @@
-﻿using System.IO.Pipelines;
+﻿using System.ComponentModel.Design;
+using System.IO.Pipelines;
 using System.Runtime.CompilerServices;
 
 namespace Adventure3;
@@ -48,7 +49,12 @@ class Program
         public Room CurrentRoom { get; set; }
         public const string look = "look";
         const string get = "get";
-        const string inv = "inv";
+        const string inv = "i";
+        const string help = "help";
+        public const string north = "north";
+        public const string south = "south";
+        public const string east = "east";
+        public const string west = "west";
 
         public Player(Room startRoom)
         {
@@ -89,6 +95,13 @@ class Program
                 //Call method
                 GetItem(playerAction);
             }
+            else if (playerAction == help)
+            {
+                //show what kind of commands/actions the user can perform
+                //Note: move this to it's own method
+                Console.WriteLine("List of possible actions to perform: ");
+                Console.WriteLine($"{look}, {inv}, {get}, {north}, {south}, {east}, {west} \n");
+            }
             else
             {
                 Console.WriteLine("You can't go that way.");
@@ -107,18 +120,18 @@ class Program
     static public int Initialize()
     {
         //Less chance of accidentally writing playerActions wrong         
-        const string north = "north";
-        const string south = "south";
-        const string east = "east";
-        const string west = "west";
+        //const string north = "north";
+        // const string south = "south";
+        // const string east = "east";
+        // const string west = "west";
 
         // Connecting rooms 
-        dockingBay.AddExit(south, bridge);
-        storageRoom.AddExit(north, bridge);
+        dockingBay.AddExit(Player.south, bridge);
+        storageRoom.AddExit(Player.north, bridge);
 
         //Bridge room has two exits
-        bridge.AddExit(south, storageRoom);
-        bridge.AddExit(north, dockingBay);
+        bridge.AddExit(Player.south, storageRoom);
+        bridge.AddExit(Player.north, dockingBay);
 
         //Add items to rooms
         bridge.Items.Add("keycard");
@@ -156,7 +169,9 @@ class Program
 
     static public void IterateItems()
     {
-        Console.WriteLine("You see: ");
+        //Check if there are items in the room
+        if (player.CurrentRoom.Items.Count > 0)
+            Console.WriteLine("You see: ");
 
         //iterate items in room
         for (int i = 0; i < player.CurrentRoom.Items.Count(); i++)
@@ -170,8 +185,13 @@ class Program
 
     static public void ShowInventory()
     {
-        //Show player's inventory        
-        Console.WriteLine("You have: ");
+        //Show player's inventory   
+        //Check if player has any items
+        if (player.Inventory.Count > 0)
+            Console.WriteLine("You have: ");
+        else
+            Console.WriteLine("You have no items");
+
         for (int i = 0; i < player.Inventory.Count(); i++)
         {
             Console.WriteLine($"- {player.Inventory[i]}");
@@ -256,7 +276,7 @@ class Program
             //Prolly add some more descriptive text here, lol!            
             if (!gameStarted)
             {
-                Console.WriteLine("Hello there, stranger. Why not have a 'look' around?");
+                Console.WriteLine("Hello there, stranger. Type 'help' for possible commands");
                 gameStarted = true;
             }
 
@@ -280,11 +300,12 @@ class Program
                     Thread.Sleep(20);
                 }
                 //break;
+
                 //keep CLI open until user presses any key
+                //Note: this crashes in VS Code but works fine in CLI
                 Console.WriteLine("\nPress any key to exit...");
                 Console.ReadKey();
                 break;
-
             }
 
             player.Action(input);
