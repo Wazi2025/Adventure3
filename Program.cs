@@ -28,11 +28,11 @@ class Program
         bridge.AddExit(Player.north, dockingBay);
 
         //Add items to rooms
-        bridge.Items.Add("keycard");
-        bridge.Items.Add("newspaper");
-        dockingBay.Items.Add("Blaster");
-        storageRoom.Items.Add("broom");
-        storageRoom.Items.Add("bucket");
+        bridge.Items.Add("keycard", bridge);
+        bridge.Items.Add("newspaper", bridge);
+        dockingBay.Items.Add("Blaster", dockingBay);
+        storageRoom.Items.Add("broom", dockingBay);
+        storageRoom.Items.Add("bucket", dockingBay);
 
         //Add items to player inventory
         // player.Inventory.Add("some pocket lint");

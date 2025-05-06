@@ -97,10 +97,13 @@ public class Player
             Console.WriteLine("You see: ");
 
         //iterate items in room
-        for (int i = 0; i < player.CurrentRoom.Items.Count(); i++)
-        {
-            Console.WriteLine(player.CurrentRoom.Items[i]);
-        }
+
+        foreach (var item in player.CurrentRoom.Items)
+            Console.WriteLine(item.Key);
+        // for (int i = 0; i < player.CurrentRoom.Items.Count(); i++)
+        // {
+        //     Console.WriteLine(player.CurrentRoom.Items.Keys);
+        // }
 
         //Add some space after item iteration
         Console.WriteLine();
@@ -126,6 +129,8 @@ public class Player
     {
         string item = "keycard";
         string room = "Bridge";
+
+        string[] arrayWords = playerAction.Split(" ");
 
         if (player.Inventory.Contains(item) && player.CurrentRoom.Name == room)
         {
@@ -170,19 +175,42 @@ public class Player
             //We don't currently use it but might later on
             //string get = playerAction.Substring(0, itemIndex);
 
+            // foreach (var item in player.CurrentRoom.Items)
+            //     Console.WriteLine(item.Key);
+
             //if player input word is the same as an item in CurrentRoom
             //we add this item to inventory and remove it from CurrentRoom's itemlist
-            if (tempItem.ToLower() == player.CurrentRoom.Items[i].ToLower())
+            string removeRoomItem = "";
+
+            foreach (var item in player.CurrentRoom.Items)
             {
-                player.Inventory.Add(player.CurrentRoom.Items[i]);
+                if (tempItem.ToLower() == item.Key)
+                {
+                    removeRoomItem = item.Key;
+                    player.Inventory.Add(item.Key);
 
-                //Remove item from CurrentRoom's itemlist
-                player.CurrentRoom.Items.RemoveAt(i);
+                    //Remove item from CurrentRoom's itemlist
+                    //foreach (var roomItem in player.CurrentRoom.Items)
+                    player.CurrentRoom.Items.Remove(removeRoomItem);
 
-                Console.WriteLine($"You pick up {tempItem}.\n");
-                itemFound = true;
-                break;
+                    Console.WriteLine($"You pick up {removeRoomItem}.\n");
+                    itemFound = true;
+                    break;
+                }
             }
+
+
+            //     if (tempItem.ToLower() == player.CurrentRoom.Items.ToLower())            
+            // {
+            //     player.Inventory.Add(player.CurrentRoom.Items[i]);
+
+            //     //Remove item from CurrentRoom's itemlist
+            //     player.CurrentRoom.Items.RemoveAt(i);
+
+            //     Console.WriteLine($"You pick up {tempItem}.\n");
+            //     itemFound = true;
+            //     break;
+            // }
         }
 
         //Inform user if item is not in CurrentRoom's itemlist

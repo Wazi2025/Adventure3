@@ -8,7 +8,8 @@ public class Room
     public string Description { get; set; }
 
     //List of items (if any) in room
-    public List<string> Items { get; set; }
+    //public List<string> Items { get; set; }
+    public Dictionary<string, Room> Items { get; set; }
 
     //List of number of exits in room
     public List<string> NumberOfExits { get; set; }
@@ -21,7 +22,7 @@ public class Room
         Description = description;
 
         Exits = new Dictionary<string, Room>();
-        Items = new List<string>();
+        Items = new Dictionary<string, Room>();
         NumberOfExits = new List<string>();
     }
 
