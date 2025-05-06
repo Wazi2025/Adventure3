@@ -74,20 +74,29 @@ public class Player
     static public void DisplayExits(Room CurrentRoom)
     {
         //check number of exits for CurrentRoom (the room the player is in)       
-        string ExitsList = "";
+        string exitsList = "";
+        string exitText = "There is an exit:";
+        string exitTextMany = "There are exits:";
+        bool manyExits = true;
 
         for (int i = 0; i < CurrentRoom.NumberOfExits.Count; i++)
         {
             if (CurrentRoom.NumberOfExits.Count <= 1)
             {
-                ExitsList = "\n" + CurrentRoom.NumberOfExits[i];
+                manyExits = false;
+                exitsList = "\n" + CurrentRoom.NumberOfExits[i];
             }
             else
             {
-                ExitsList += "\n" + CurrentRoom.NumberOfExits[i];
+                manyExits = true;
+                exitsList += "\n" + CurrentRoom.NumberOfExits[i];
             }
         }
-        Console.WriteLine($"There are exit(s): {ExitsList}\n");
+        if (manyExits)
+            Console.WriteLine($"{exitTextMany} {exitsList}\n");
+        else
+            Console.WriteLine($"{exitText} {exitsList}\n");
+
     }//End DisplayExits
 
     static public void IterateItems(Player player)
@@ -97,13 +106,8 @@ public class Player
             Console.WriteLine("You see: ");
 
         //iterate items in room
-
         foreach (var item in player.CurrentRoom.Items)
             Console.WriteLine(item.Key);
-        // for (int i = 0; i < player.CurrentRoom.Items.Count(); i++)
-        // {
-        //     Console.WriteLine(player.CurrentRoom.Items.Keys);
-        // }
 
         //Add some space after item iteration
         Console.WriteLine();
@@ -146,16 +150,43 @@ public class Player
         string tempItem = "";
 
         //Player can pickup any item in CurrentRoom's itemlist
-        for (int i = 0; i < player.CurrentRoom.Items.Count; i++)
+
+        int itemIndex = 0;
+
+        //Use String.Split method to split verb/items based on blank space (" ")
+        string[] arrayWords = playerAction.Split(" ");
+
+        //Split player input based on using blank space(" ") as a marker
+        //Note: This means that currently this routine only accepts 1 blank space, i.e. "old newspaper" will fail
+        //
+        //Check if blank space (" ") can actually be found in the input string
+        //or else we would get an ArgumentOutOfRangeException when assigning itemIndex
+        // if (playerAction.IndexOf(" ")! > -1)
+        //     itemIndex = playerAction.IndexOf(" ");
+        // else
+        // {
+        //     //inform user if input is missing a string (or item in this case). e.g. 'get card'/get keycard
+        //     Console.WriteLine("What do you want to get?");
+        //     missingItem = true;
+        //     break;
+        // }
+
+        //remove any whitespace
+        tempItem = playerAction.Substring(itemIndex).Trim();
+
+        //Extract the word from index 0 to before the blank space, in this case it's 'get'.
+        //We don't currently use it but might later on
+        //string get = playerAction.Substring(0, itemIndex);
+
+        // foreach (var item in player.CurrentRoom.Items)
+        //     Console.WriteLine(item.Key);
+
+        //if player input word is the same as an item in CurrentRoom
+        //we add this item to inventory and remove it from CurrentRoom's itemlist
+        string removeRoomItem = "";
+
+        foreach (var item in player.CurrentRoom.Items)
         {
-            int itemIndex = 0;
-
-            //Use String.Split method to split verb/items based on blank space (" ")
-            string[] arrayWords = playerAction.Split(" ");
-
-            //Split player input based on using blank space(" ") as a marker
-            //Note: This means that currently this routine only accepts 1 blank space, i.e. "old newspaper" will fail
-            //
             //Check if blank space (" ") can actually be found in the input string
             //or else we would get an ArgumentOutOfRangeException when assigning itemIndex
             if (playerAction.IndexOf(" ")! > -1)
@@ -168,53 +199,24 @@ public class Player
                 break;
             }
 
-            //remove any whitespace
-            tempItem = playerAction.Substring(itemIndex).Trim();
-
-            //Extract the word from index 0 to before the blank space, in this case it's 'get'.
-            //We don't currently use it but might later on
-            //string get = playerAction.Substring(0, itemIndex);
-
-            // foreach (var item in player.CurrentRoom.Items)
-            //     Console.WriteLine(item.Key);
-
-            //if player input word is the same as an item in CurrentRoom
-            //we add this item to inventory and remove it from CurrentRoom's itemlist
-            string removeRoomItem = "";
-
-            foreach (var item in player.CurrentRoom.Items)
+            if (arrayWords[1].ToLower() == item.Key)
             {
-                if (tempItem.ToLower() == item.Key)
-                {
-                    removeRoomItem = item.Key;
-                    player.Inventory.Add(item.Key);
+                removeRoomItem = item.Key;
+                player.Inventory.Add(item.Key);
 
-                    //Remove item from CurrentRoom's itemlist
-                    //foreach (var roomItem in player.CurrentRoom.Items)
-                    player.CurrentRoom.Items.Remove(removeRoomItem);
+                //Remove item from CurrentRoom's itemlist                
+                player.CurrentRoom.Items.Remove(removeRoomItem);
 
-                    Console.WriteLine($"You pick up {removeRoomItem}.\n");
-                    itemFound = true;
-                    break;
-                }
+                Console.WriteLine($"You pick up {removeRoomItem}.\n");
+                itemFound = true;
+                break;
             }
-
-
-            //     if (tempItem.ToLower() == player.CurrentRoom.Items.ToLower())            
-            // {
-            //     player.Inventory.Add(player.CurrentRoom.Items[i]);
-
-            //     //Remove item from CurrentRoom's itemlist
-            //     player.CurrentRoom.Items.RemoveAt(i);
-
-            //     Console.WriteLine($"You pick up {tempItem}.\n");
-            //     itemFound = true;
-            //     break;
-            // }
         }
+        // }
+
 
         //Inform user if item is not in CurrentRoom's itemlist
         if (!itemFound && missingItem == false)
-            Console.WriteLine($"There is no '{tempItem}' to pick up!\n");
+            Console.WriteLine($"There is no '{arrayWords[1]}' to pick up!\n");
     }//End of GetItem
 }//End of class Player
