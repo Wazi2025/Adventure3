@@ -1,0 +1,205 @@
+public class Player
+{
+    public List<string> Inventory { get; set; }
+    public Room CurrentRoom { get; set; }
+    public const string look = "look";
+    public const string get = "get";
+    public const string use = "use";
+    public const string inv = "i";
+    public const string help = "help";
+    public const string north = "north";
+    public const string south = "south";
+    public const string east = "east";
+    public const string west = "west";
+    public const string exit = "exit";
+    public const string quit = "quit";
+
+    public Player(Room startRoom)
+    {
+        Inventory = new List<string>();
+        CurrentRoom = startRoom;
+    }
+
+    public void Action(string playerAction, Player player)
+    {
+
+        if (CurrentRoom.Exits.ContainsKey(playerAction))
+        {
+            CurrentRoom = CurrentRoom.Exits[playerAction];
+            Console.WriteLine($"You move {playerAction} and enter the {CurrentRoom.Name}.\n");
+            Console.WriteLine(CurrentRoom.Description);
+
+            //Call methods
+            IterateItems(player);
+            DisplayExits(CurrentRoom);
+
+        }
+        else if (playerAction == look)
+        {
+            Console.WriteLine($"{CurrentRoom.Name}\n");
+            Console.WriteLine(CurrentRoom.Description);
+
+            //Call methods
+            IterateItems(player);
+            DisplayExits(CurrentRoom);
+        }
+        else if (playerAction == inv)
+        {
+            //Call method
+            ShowInventory(player);
+        }
+        else if (playerAction.Contains(get))
+        {
+            //Call method
+            GetItem(playerAction, player);
+        }
+        else if (playerAction.Contains(use))
+        {
+            //Call method
+            UseItem(playerAction, player);
+        }
+        else if (playerAction == help)
+        {
+            //show what kind of commands/actions the user can perform
+            //Note: move this to it's own method
+            Console.WriteLine("List of possible actions to perform: ");
+            Console.WriteLine($"{look}, {inv}, {get}, {north}, {south}, {east}, {west} \n");
+        }
+        else
+        {
+            Console.WriteLine("You can't go that way.");
+        }
+    }
+
+    static public void DisplayExits(Room CurrentRoom)
+    {
+        //check number of exits for CurrentRoom (the room the player is in)       
+        string exitsList = "";
+        string exitText = "There is an exit:";
+        string exitTextMany = "There are exits:";
+        bool manyExits = true;
+
+        for (int i = 0; i < CurrentRoom.NumberOfExits.Count; i++)
+        {
+            if (CurrentRoom.NumberOfExits.Count <= 1)
+            {
+                manyExits = false;
+                exitsList = "\n" + CurrentRoom.NumberOfExits[i];
+            }
+            else
+            {
+                manyExits = true;
+                exitsList += "\n" + CurrentRoom.NumberOfExits[i];
+            }
+        }
+        if (manyExits)
+            Console.WriteLine($"{exitTextMany} {exitsList}\n");
+        else
+            Console.WriteLine($"{exitText} {exitsList}\n");
+
+    }//End DisplayExits
+
+    static public void IterateItems(Player player)
+    {
+        //Check if there are items in the room
+        if (player.CurrentRoom.Items.Count > 0)
+            Console.WriteLine("You see: ");
+
+        //iterate items in room
+        foreach (var item in player.CurrentRoom.Items)
+            Console.WriteLine(item.Key);
+
+        //Add some space after item iteration
+        Console.WriteLine();
+    }//End of IterateItems
+
+    static public void ShowInventory(Player player)
+    {
+        //Show player's inventory   
+        //Check if player has any items
+        if (player.Inventory.Count > 0)
+            Console.WriteLine("You have: ");
+        else
+            Console.WriteLine("You have no items");
+
+        for (int i = 0; i < player.Inventory.Count(); i++)
+        {
+            Console.WriteLine($"- {player.Inventory[i]}");
+        }
+        Console.WriteLine();
+
+    }//End of ShowInventory
+
+    static public void UseItem(string playerAction, Player player)
+    {
+        //Note: this is just a test. Will need to implement (somehow) some sort of Infocom type parser.        
+        string item = "keycard";
+        string room = "Bridge";
+
+        string[] arrayWords = playerAction.Split(" ");
+
+        if (player.Inventory.Contains(item) && player.CurrentRoom.Name == room)
+        {
+            Console.WriteLine($"You insert the {item} into the computer slot.");
+        }
+        else if (!player.Inventory.Contains(item))
+            Console.WriteLine($"You don't have a {item}.");
+    }
+    static public void GetItem(string playerAction, Player player)
+    {
+        bool itemFound = false;
+        bool missingItem = false;
+        string tempItem = "";
+
+        int itemIndex = 0;
+
+        //Use String.Split method to split verb/items based on blank space (" ")
+        string[] arrayWords = playerAction.Split(" ");
+
+        //remove any whitespace
+        tempItem = playerAction.Substring(itemIndex).Trim();
+
+        //Extract the word from index 0 to before the blank space, in this case it's 'get'.
+        //We don't currently use it but might later on
+        //string get = playerAction.Substring(0, itemIndex);
+
+        // foreach (var item in player.CurrentRoom.Items)
+        //     Console.WriteLine(item.Key);
+
+        //if player input word is the same as an item in CurrentRoom
+        //we add this item to inventory and remove it from CurrentRoom's itemlist
+        string removeRoomItem = "";
+
+        foreach (var item in player.CurrentRoom.Items)
+        {
+            //Check if blank space (" ") can actually be found in the input string
+            //or else we would get an ArgumentOutOfRangeException when assigning itemIndex
+            if (playerAction.IndexOf(" ")! > -1)
+                itemIndex = playerAction.IndexOf(" ");
+            else
+            {
+                //inform user if input is missing a string (or item in this case). e.g. 'get card'/get keycard
+                Console.WriteLine("What do you want to get?");
+                missingItem = true;
+                break;
+            }
+
+            if (arrayWords[1].ToLower() == item.Key)
+            {
+                removeRoomItem = item.Key;
+                player.Inventory.Add(item.Key);
+
+                //Remove item from CurrentRoom's itemlist                
+                player.CurrentRoom.Items.Remove(removeRoomItem);
+
+                Console.WriteLine($"You pick up {removeRoomItem}.\n");
+                itemFound = true;
+                break;
+            }
+        }
+
+        //Inform user if item is not in CurrentRoom's itemlist
+        if (!itemFound && missingItem == false)
+            Console.WriteLine($"There is no '{arrayWords[1]}' to pick up!\n");
+    }//End of GetItem
+}//End of class Player
