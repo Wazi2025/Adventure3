@@ -73,7 +73,7 @@ public class Player
     {
         //show what kind of commands/actions the user can perform        
         Console.WriteLine("List of possible actions to perform: ");
-        Console.WriteLine($"{look}, {inv}, {get}, {north}, {south}, {east}, {west} \n");
+        Console.WriteLine($"{look}, {inv}, {get}, {use}, {north}, {south}, {east}, {west} \n");
     }
     static public void DisplayExits(Room CurrentRoom)
     {
@@ -141,44 +141,62 @@ public class Player
     static public void UseItem(string playerAction, Player player)
     {
         //Note: this is just a test. Will need to implement (somehow) some sort of Infocom type parser.
+        #region test
+        //int itemIndex;
+        // string item = "keycard";
+        // string room = "Bridge";
 
-        int itemIndex;
-        string item = "keycard";
-        string room = "Bridge";
+        // string[] arrayWords = playerAction.Split(" ");
+        // for (int i = 0; i < arrayWords.Length; i++)
+        // {
+        //     string tempItem = "";
+        //     if (i >= 1)
+        //     {
+        //         tempItem = arrayWords[i];
 
-        string[] arrayWords = playerAction.Split(" ");
-        for (int i = 0; i < arrayWords.Length; i++)
+        //         if (!player.Inventory.Contains(arrayWords[i]))
+        //         {
+        //             Console.WriteLine($"You don't have {tempItem}!");
+        //             return;
+        //         }
+
+        //     }
+        // }
+
+        // if (playerAction.IndexOf(" ")! > -1)
+        //     itemIndex = playerAction.IndexOf(" ");
+        // else
+        // {
+        //     //inform user if input is missing a string (or item in this case). e.g. 'use card'/use keycard
+        //     Console.WriteLine("What do you want to use?");
+        //     return;
+        // }
+
+        // if (player.Inventory.Contains(item) && player.CurrentRoom.Name == room)
+        // {
+        //     Console.WriteLine($"You insert the {item} into the computer slot.");
+        // }
+        // else if (!player.Inventory.Contains(item))
+        //     Console.WriteLine($"You don't have a {item}!");
+        // else if (player.CurrentRoom.Name != room && player.Inventory.Contains(item))
+        //     Console.WriteLine($"You are not in {room}!");
+        #endregion
+
+        foreach (var item in player.CurrentRoom.Puzzles)
         {
-            string tempItem = "";
-            if (i >= 1)
+            if (player.Inventory.Contains(item.Key) && player.CurrentRoom.Name.Equals(item.Value))
             {
-                tempItem = arrayWords[i];
-
-                if (!player.Inventory.Contains(arrayWords[i]))
-                {
-                    Console.WriteLine($"You don't have {tempItem}!");
-                    return;
-                }
+                Console.WriteLine($"You insert {item.Key} into the computer slot");
+            }
+            else if (player.Inventory.Contains(item.Key) && !player.CurrentRoom.Name.Equals(item.Value))
+            {
+                Console.WriteLine($"Unable to use {item.Key} here. Perhaps another room?");
+            }
+            else if (!player.Inventory.Contains(item.Key))
+            {
+                Console.WriteLine($"You are not in posession of {item.Key}");
             }
         }
-
-        if (playerAction.IndexOf(" ")! > -1)
-            itemIndex = playerAction.IndexOf(" ");
-        else
-        {
-            //inform user if input is missing a string (or item in this case). e.g. 'use card'/use keycard
-            Console.WriteLine("What do you want to use?");
-            return;
-        }
-
-        if (player.Inventory.Contains(item) && player.CurrentRoom.Name == room)
-        {
-            Console.WriteLine($"You insert the {item} into the computer slot.");
-        }
-        else if (!player.Inventory.Contains(item))
-            Console.WriteLine($"You don't have a {item}!");
-        else if (player.CurrentRoom.Name != room && player.Inventory.Contains(item))
-            Console.WriteLine($"You are not in {room}!");
     }
     static public void GetItem(string playerAction, Player player)
     {

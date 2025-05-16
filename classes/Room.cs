@@ -11,6 +11,8 @@ public class Room
     //public List<string> Items { get; set; }
     public Dictionary<string, Room> Items { get; set; }
 
+    public Dictionary<string, string> Puzzles { get; set; }
+
     //List of number of exits in room
     public List<string> NumberOfExits { get; set; }
 
@@ -24,6 +26,9 @@ public class Room
         Exits = new Dictionary<string, Room>();
         Items = new Dictionary<string, Room>();
         NumberOfExits = new List<string>();
+        Puzzles = new Dictionary<string, string>();
+
+        InitializePuzzles();
     }
 
     // Adds an exit from this room to another
@@ -32,5 +37,10 @@ public class Room
         Exits[playerAction.ToLower()] = targetRoom;
 
         NumberOfExits.Add(playerAction);
+    }
+
+    public void InitializePuzzles()
+    {
+        Puzzles.Add("keycard", "Bridge");
     }
 }//End of class Room
