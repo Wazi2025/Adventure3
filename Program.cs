@@ -65,10 +65,6 @@ class Program
         //items is all items in all rooms combined from Initialize method
         items = Initialize();
 
-        // Start the process (open image with the default viewer)
-        //Process imageViewerProcess = Process.Start(new ProcessStartInfo(imagePath) { UseShellExecute = true });
-
-
         while (true)
         {
             //Prolly add some more descriptive text here, lol!            
@@ -83,16 +79,8 @@ class Program
 
             //Break loop if user inputs 'quit' or 'exit'
             if (input == Player.exit || input == Player.quit)
-            {
-                //if (!imageViewerProcess.HasExited)
-                //Note: The process doesn't seem to close/closes intermittently. Look into why.
-
-                // string pName = imageViewerProcess.ProcessName;
-                //imageViewerProcess.CloseMainWindow();
-                //Console.WriteLine($"The process {imageViewerProcess.ProcessName} has been killed");
-
                 break;
-            }
+
 
             if (player.Inventory.Count == items)
             //if (player.Inventory.Count == 1) //testing
