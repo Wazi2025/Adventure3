@@ -60,10 +60,8 @@ public class Player
         }
         else if (playerAction == help)
         {
-            //show what kind of commands/actions the user can perform
-            //Note: move this to it's own method
-            Console.WriteLine("List of possible actions to perform: ");
-            Console.WriteLine($"{look}, {inv}, {get}, {north}, {south}, {east}, {west} \n");
+            //Call method
+            Help();
         }
         else
         {
@@ -71,12 +69,18 @@ public class Player
         }
     }
 
+    static public void Help()
+    {
+        //show what kind of commands/actions the user can perform        
+        Console.WriteLine("List of possible actions to perform: ");
+        Console.WriteLine($"{look}, {inv}, {get}, {north}, {south}, {east}, {west} \n");
+    }
     static public void DisplayExits(Room CurrentRoom)
     {
         //check number of exits for CurrentRoom (the room the player is in)       
         string exitsList = "";
-        string exitText = "There is an exit:";
-        string exitTextMany = "There are exits:";
+        const string exitText = "There is an exit:";
+        const string exitTextMany = "There are exits:";
         bool manyExits = true;
 
         for (int i = 0; i < CurrentRoom.NumberOfExits.Count; i++)
@@ -101,9 +105,11 @@ public class Player
 
     static public void IterateItems(Player player)
     {
+        const string youSeeText = "You see: ";
+
         //Check if there are items in the room
         if (player.CurrentRoom.Items.Count > 0)
-            Console.WriteLine("You see: ");
+            Console.WriteLine(youSeeText);
 
         //iterate items in room
         foreach (var item in player.CurrentRoom.Items)
@@ -115,12 +121,15 @@ public class Player
 
     static public void ShowInventory(Player player)
     {
+        const string ItemsText = "You have: ";
+        const string noItemsText = "You have no items";
+
         //Show player's inventory   
         //Check if player has any items
         if (player.Inventory.Count > 0)
-            Console.WriteLine("You have: ");
+            Console.WriteLine(ItemsText);
         else
-            Console.WriteLine("You have no items");
+            Console.WriteLine(noItemsText);
 
         for (int i = 0; i < player.Inventory.Count(); i++)
         {
@@ -131,17 +140,44 @@ public class Player
 
     static public void UseItem(string playerAction, Player player)
     {
+        //Note: this is just a test. Will need to implement (somehow) some sort of Infocom type parser.
+        int itemIndex;
         string item = "keycard";
         string room = "Bridge";
 
         string[] arrayWords = playerAction.Split(" ");
+        for (int i = 0; i < arrayWords.Length; i++)
+        {
+            string tempItem = "";
+            if (i >= 1)
+            {
+                tempItem = arrayWords[i];
+
+                if (!player.Inventory.Contains(arrayWords[i]))
+                {
+                    Console.WriteLine($"You don't have {tempItem}!");
+                    return;
+                }
+            }
+        }
+
+        if (playerAction.IndexOf(" ")! > -1)
+            itemIndex = playerAction.IndexOf(" ");
+        else
+        {
+            //inform user if input is missing a string (or item in this case). e.g. 'use card'/use keycard
+            Console.WriteLine("What do you want to use?");
+            return;
+        }
 
         if (player.Inventory.Contains(item) && player.CurrentRoom.Name == room)
         {
             Console.WriteLine($"You insert the {item} into the computer slot.");
         }
         else if (!player.Inventory.Contains(item))
-            Console.WriteLine($"You don't have a {item}.");
+            Console.WriteLine($"You don't have a {item}!");
+        else if (player.CurrentRoom.Name != room && player.Inventory.Contains(item))
+            Console.WriteLine($"You are not in {room}!");
     }
     static public void GetItem(string playerAction, Player player)
     {

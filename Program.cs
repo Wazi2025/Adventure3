@@ -45,8 +45,6 @@ class Program
 
     static void Main(string[] args)
     {
-
-
         string imagePath = @"C:\Users\Instruktor\Desktop\CSharp\Adventure3\gfx\hhg.png";
         bool gameStarted = false;
         int items;
@@ -100,7 +98,7 @@ class Program
             //if (player.Inventory.Count == 1) //testing
             {
                 string winner2 = $"Congratulations! You managed to collect {player.Inventory.Count} of {items} items. An amazing performance!\n";
-                //Console.WriteLine($"Congratulations! You managed to collect {player.Inventory.Count} of {items} items. An amazing performance!\n");
+
                 Console.WriteLine(winner);
 
                 //Add some "animation" ;-)
