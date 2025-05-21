@@ -145,7 +145,7 @@ public class Player
         string[] tempItem = playerAction.Split(" ");
 
         //foreach (var item in player.CurrentRoom.Puzzles)
-        for (int j = 0; j <= player.CurrentRoom.Puzzles.Count; j++)
+        for (int j = 0; j < player.CurrentRoom.Puzzles.Count; j++)
         {
             if (player.CurrentRoom.Name.Equals("Bridge"))
             {
@@ -172,7 +172,7 @@ public class Player
                     }
                     else if (item.Key == tempItem[1] && hasItem && correctRoom)
                     {
-                        Console.WriteLine($"You insert the {item.Key} into the computer slot");
+                        Console.WriteLine($"You insert the {item.Key} into the computer slot.");
                         Console.WriteLine("A hologram of a beautiful woman coalesce in front of you. 'Hello, I am SAL. How may I be of service?'");
                         return;
                     }
@@ -182,7 +182,7 @@ public class Player
 
             else if (player.CurrentRoom.Name.Equals("Docking Bay"))
             {
-                for (int i = 0; i <= player.Inventory.Count; i++)
+                for (int i = 0; i < player.Inventory.Count; i++)
                 {
                     bool hasItem = player.Inventory.Contains(tempItem[1]);
                     KeyValuePair<string, string> item = player.CurrentRoom.Puzzles.ElementAt(j);
@@ -274,7 +274,7 @@ public class Player
                 //Remove item from CurrentRoom's itemlist                
                 player.CurrentRoom.Items.Remove(removeRoomItem);
 
-                Console.WriteLine($"You pick up {removeRoomItem}.");
+                Console.WriteLine($"You pick up the {removeRoomItem}.");
                 itemFound = true;
                 break;
             }

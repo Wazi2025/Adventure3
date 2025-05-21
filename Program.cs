@@ -45,7 +45,7 @@ class Program
 
     static void Main(string[] args)
     {
-        string imagePath = @"C:\Users\Instruktor\Desktop\CSharp\Adventure3\gfx\hhg.png";
+        //string imagePath = @"C:\Users\Instruktor\Desktop\CSharp\Adventure3\gfx\hhg.png";
         bool gameStarted = false;
         int items;
         string winner = @"                                                                                                                                                                            
