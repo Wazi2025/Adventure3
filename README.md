@@ -3,7 +3,7 @@ An old school text adventure in the style of Infocom using Classes, Objects & Li
 And there are, of course, 3 reasons why it's called Adventure 3:
 
 1. Not enough coffee
-2. To much coffee
+2. Too much coffee
 3. We're getting there
 
 In any case: enjoy.
