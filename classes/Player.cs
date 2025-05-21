@@ -141,66 +141,56 @@ public class Player
     static public void UseItem(string playerAction, Player player)
     {
         //Note: this is just a test. Will need to implement (somehow) some sort of Infocom type parser.
-        #region test
-        //int itemIndex;
-        // string item = "keycard";
-        // string room = "Bridge";
-
-        // string[] arrayWords = playerAction.Split(" ");
-        // for (int i = 0; i < arrayWords.Length; i++)
-        // {
-        //     string tempItem = "";
-        //     if (i >= 1)
-        //     {
-        //         tempItem = arrayWords[i];
-
-        //         if (!player.Inventory.Contains(arrayWords[i]))
-        //         {
-        //             Console.WriteLine($"You don't have {tempItem}!");
-        //             return;
-        //         }
-
-        //     }
-        // }
-
-        // if (playerAction.IndexOf(" ")! > -1)
-        //     itemIndex = playerAction.IndexOf(" ");
-        // else
-        // {
-        //     //inform user if input is missing a string (or item in this case). e.g. 'use card'/use keycard
-        //     Console.WriteLine("What do you want to use?");
-        //     return;
-        // }
-
-        // if (player.Inventory.Contains(item) && player.CurrentRoom.Name == room)
-        // {
-        //     Console.WriteLine($"You insert the {item} into the computer slot.");
-        // }
-        // else if (!player.Inventory.Contains(item))
-        //     Console.WriteLine($"You don't have a {item}!");
-        // else if (player.CurrentRoom.Name != room && player.Inventory.Contains(item))
-        //     Console.WriteLine($"You are not in {room}!");
-        #endregion
 
         string[] tempItem = playerAction.Split(" ");
-        //Check SAL's suggestion:
-        foreach (var item in player.CurrentRoom.Puzzles)
+
+        //foreach (var item in player.CurrentRoom.Puzzles)
+        for (int j = 0; j <= player.CurrentRoom.Puzzles.Count; j++)
         {
             if (player.CurrentRoom.Name.Equals("Bridge"))
             {
                 for (int i = 0; i <= player.Inventory.Count; i++)
                 {
                     bool hasItem = player.Inventory.Contains(tempItem[1]);
+                    KeyValuePair<string, string> item = player.CurrentRoom.Puzzles.ElementAt(j);
                     bool correctRoom = player.CurrentRoom.Name.Equals(item.Value);
 
                     if (!hasItem)
                     {
-                        Console.WriteLine($"You are not in posession of {tempItem[1]}");
+                        Console.WriteLine($"You are not in posession of a {tempItem[1]}");
                         return;
                     }
-                    else if (item.Key != tempItem[1] && hasItem)
+                    // else if (item.Key != tempItem[1] && hasItem)
+                    // {
+                    //     Console.WriteLine($"That does not seem to work. Yet.");
+                    //     return;
+                    // }
+                    else if (item.Key == tempItem[1] && hasItem && !correctRoom)
                     {
-                        Console.WriteLine($"That does not seem to work. Yet.");
+                        Console.WriteLine($"Unable to use {tempItem[1]} here. Perhaps another room?");
+                        return;
+                    }
+                    else if (item.Key == tempItem[1] && hasItem && correctRoom)
+                    {
+                        Console.WriteLine($"You insert the {item.Key} into the computer slot");
+                        Console.WriteLine("A hologram of a beautiful woman coalesce in front of you. 'Hello, I am SAL. How may I be of service?'");
+                        return;
+                    }
+
+                }
+            }//End of Bridge "puzzle
+
+            else if (player.CurrentRoom.Name.Equals("Docking Bay"))
+            {
+                for (int i = 0; i <= player.Inventory.Count; i++)
+                {
+                    bool hasItem = player.Inventory.Contains(tempItem[1]);
+                    KeyValuePair<string, string> item = player.CurrentRoom.Puzzles.ElementAt(j);
+                    bool correctRoom = player.CurrentRoom.Name.Equals(item.Value);
+
+                    if (!hasItem)
+                    {
+                        Console.WriteLine($"You are not in posession of a {tempItem[1]}");
                         return;
                     }
                     else if (item.Key == tempItem[1] && hasItem && !correctRoom)
@@ -210,12 +200,12 @@ public class Player
                     }
                     else if (item.Key == tempItem[1] && hasItem && correctRoom)
                     {
-                        Console.WriteLine($"You insert {item.Key} into the computer slot");
-                        Console.WriteLine("A hologram of a beautiful woman coalesce in front of you. 'Hello, I am SAL. How may I be of service?'");
+                        Console.WriteLine($"You aim the {item.Key} at the robot and blast it to smithereens!");
+                        Console.WriteLine("He looks slightly more depressed than before. ");
                         return;
                     }
                 }
-            }
+            }//End of Docking Bay "puzzle"
 
         }//End of Puzzles loop
 
