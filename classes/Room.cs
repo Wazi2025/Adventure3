@@ -41,6 +41,7 @@ public class Room
 
     public void InitializePuzzles()
     {
+        Puzzles.Add("blaster", "Docking Bay");
         Puzzles.Add("keycard", "Bridge");
     }
 }//End of class Room

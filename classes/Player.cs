@@ -182,22 +182,44 @@ public class Player
         //     Console.WriteLine($"You are not in {room}!");
         #endregion
 
+        string[] tempItem = playerAction.Split(" ");
+        //Check SAL's suggestion:
         foreach (var item in player.CurrentRoom.Puzzles)
         {
-            if (player.Inventory.Contains(item.Key) && player.CurrentRoom.Name.Equals(item.Value))
+            if (player.CurrentRoom.Name.Equals("Bridge"))
             {
-                Console.WriteLine($"You insert {item.Key} into the computer slot");
+                for (int i = 0; i <= player.Inventory.Count; i++)
+                {
+                    bool hasItem = player.Inventory.Contains(tempItem[1]);
+                    bool correctRoom = player.CurrentRoom.Name.Equals(item.Value);
+
+                    if (!hasItem)
+                    {
+                        Console.WriteLine($"You are not in posession of {tempItem[1]}");
+                        return;
+                    }
+                    else if (item.Key != tempItem[1] && hasItem)
+                    {
+                        Console.WriteLine($"That does not seem to work. Yet.");
+                        return;
+                    }
+                    else if (item.Key == tempItem[1] && hasItem && !correctRoom)
+                    {
+                        Console.WriteLine($"Unable to use {tempItem[1]} here. Perhaps another room?");
+                        return;
+                    }
+                    else if (item.Key == tempItem[1] && hasItem && correctRoom)
+                    {
+                        Console.WriteLine($"You insert {item.Key} into the computer slot");
+                        Console.WriteLine("A hologram of a beautiful woman coalesce in front of you. 'Hello, I am SAL. How may I be of service?'");
+                        return;
+                    }
+                }
             }
-            else if (player.Inventory.Contains(item.Key) && !player.CurrentRoom.Name.Equals(item.Value))
-            {
-                Console.WriteLine($"Unable to use {item.Key} here. Perhaps another room?");
-            }
-            else if (!player.Inventory.Contains(item.Key))
-            {
-                Console.WriteLine($"You are not in posession of {item.Key}");
-            }
-        }
-    }
+
+        }//End of Puzzles loop
+
+    }//End method
     static public void GetItem(string playerAction, Player player)
     {
         bool itemFound = false;
@@ -262,13 +284,11 @@ public class Player
                 //Remove item from CurrentRoom's itemlist                
                 player.CurrentRoom.Items.Remove(removeRoomItem);
 
-                Console.WriteLine($"You pick up {removeRoomItem}.\n");
+                Console.WriteLine($"You pick up {removeRoomItem}.");
                 itemFound = true;
                 break;
             }
         }
-        // }
-
 
         //Inform user if item is not in CurrentRoom's itemlist
         if (!itemFound && missingItem == false)

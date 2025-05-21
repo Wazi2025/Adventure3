@@ -11,7 +11,7 @@ class Program
 {
     //instantiate rooms
     static Room bridge = new Room("Bridge", "The control panels blink in a rhythmic pattern. You notice a computer with a thin slot in it. You're on the bridge of your ship.");
-    static Room dockingBay = new Room("Docking Bay", "You're in the docking bay. There's a shuttle here.");
+    static Room dockingBay = new Room("Docking Bay", "You're in the docking bay. There's a shuttle here. A depressed robot stands in front of it's entrance.");
     static Room storageRoom = new Room("Storage Room", "Crates and boxes fill this storage room. It's dimly lit.");
 
     //Instantiate Player        
@@ -30,7 +30,7 @@ class Program
         //Add items to rooms
         bridge.Items.Add("keycard", bridge);
         bridge.Items.Add("newspaper", bridge);
-        dockingBay.Items.Add("Blaster", dockingBay);
+        dockingBay.Items.Add("blaster", dockingBay);
         storageRoom.Items.Add("broom", dockingBay);
         storageRoom.Items.Add("bucket", dockingBay);
 
