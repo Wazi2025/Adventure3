@@ -41,6 +41,7 @@ public class Room
 
     public void InitializePuzzles()
     {
+        //Note: Prolly will have to create some sort of "puzzle" class instead
         Puzzles.Add("blaster", "Docking Bay");
         Puzzles.Add("keycard", "Bridge");
     }
