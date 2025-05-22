@@ -174,6 +174,7 @@ public class Player
                     {
                         Console.WriteLine($"You insert the {item.Key} into the computer slot.");
                         Console.WriteLine("A hologram of a beautiful woman coalesce in front of you. 'Hello, I am SAL. How may I be of service?'");
+                        player.CurrentRoom.Description += " There is a hologram of a beautiful woman here.";
                         return;
                     }
 
@@ -202,6 +203,7 @@ public class Player
                     {
                         Console.WriteLine($"You aim the {item.Key} at the robot and blast it to smithereens!");
                         Console.WriteLine("He looks slightly more depressed than before. ");
+                        player.CurrentRoom.Description += " Smoldering ruins of what used to be a slightly depressed robot lies depressingly in front of the shuttle.";
                         return;
                     }
                 }
