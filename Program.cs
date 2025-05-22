@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.ComponentModel;
 using System.IO;
 using System.Threading;
+using Adventure3.classes;
 
 namespace Adventure3;
 
@@ -95,10 +96,8 @@ class Program
                     Console.Write(c);
                     Thread.Sleep(20);
                 }
-                //break;
 
-                //keep CLI open until user presses any key
-                //Note: this crashes in VS Code but works fine in CLI
+                //keep CLI open until user presses any key                
                 Console.WriteLine("\nPress any key to exit...");
                 Console.ReadKey();
                 break;

@@ -1,3 +1,5 @@
+namespace Adventure3.classes;
+
 public class Player
 {
     public List<string> Inventory { get; set; }

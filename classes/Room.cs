@@ -1,3 +1,5 @@
+namespace Adventure3.classes;
+
 public class Room
 {
     public int allItems = 0;
