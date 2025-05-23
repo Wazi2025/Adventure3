@@ -1,32 +1,26 @@
-﻿
-using System;
-using System.Diagnostics;
-using System.ComponentModel;
-using System.IO;
-using System.Threading;
-using Adventure3.classes;
+﻿using Adventure3.classes;
 
 namespace Adventure3;
 
 class Program
 {
     //instantiate rooms
-    static Room bridge = new Room("Bridge", "The control panels blink in a rhythmic pattern. You notice a computer with a thin slot in it. You're on the bridge of your ship.");
-    static Room dockingBay = new Room("Docking Bay", "You're in the docking bay. There's a shuttle here. A depressed robot stands in front of it's entrance.");
-    static Room storageRoom = new Room("Storage Room", "Crates and boxes fill this storage room. It's dimly lit.");
+    public static Room bridge = new Room("Bridge", "The control panels blink in a rhythmic pattern. You notice a computer with a thin slot in it. You're on the bridge of your ship.");
+    public static Room dockingBay = new Room("Docking Bay", "You're in the docking bay. There's a shuttle here. A depressed robot stands in front of it's entrance.");
+    public static Room storageRoom = new Room("Storage Room", "Crates and boxes fill this storage room. It's dimly lit.");
 
     //Instantiate Player        
-    static Player player = new Player(bridge);
+    public static Player player = new Player(bridge);
 
-    static public int Initialize()
+    public static int Initialize()
     {
         // Connecting rooms 
-        dockingBay.AddExit(Player.south, bridge);
-        storageRoom.AddExit(Player.north, bridge);
+        dockingBay.AddExit(player.south, bridge);
+        storageRoom.AddExit(player.north, bridge);
 
         //Bridge room has two exits
-        bridge.AddExit(Player.south, storageRoom);
-        bridge.AddExit(Player.north, dockingBay);
+        bridge.AddExit(player.south, storageRoom);
+        bridge.AddExit(player.north, dockingBay);
 
         //Add items to rooms
         bridge.Items.Add("keycard", bridge);
@@ -79,7 +73,7 @@ class Program
             string input = Console.ReadLine().Trim().ToLower();
 
             //Break loop if user inputs 'quit' or 'exit'
-            if (input == Player.exit || input == Player.quit)
+            if (input == player.exit || input == player.quit)
                 break;
 
 

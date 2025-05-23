@@ -3,18 +3,18 @@ namespace Adventure3.classes;
 public class Player
 {
     public List<string> Inventory { get; set; }
-    public Room CurrentRoom { get; set; }
-    public const string look = "look";
-    public const string get = "get";
-    public const string use = "use";
-    public const string inv = "i";
-    public const string help = "help";
-    public const string north = "north";
-    public const string south = "south";
-    public const string east = "east";
-    public const string west = "west";
-    public const string exit = "exit";
-    public const string quit = "quit";
+    Room CurrentRoom { get; set; }
+    readonly string look = "look";
+    readonly string get = "get";
+    readonly string use = "use";
+    readonly string inv = "i";
+    readonly string help = "help";
+    readonly public string north = "north";
+    readonly public string south = "south";
+    readonly public string east = "east";
+    readonly public string west = "west";
+    readonly public string exit = "exit";
+    readonly public string quit = "quit";
 
     public Player(Room startRoom)
     {
@@ -63,7 +63,7 @@ public class Player
         else if (playerAction == help)
         {
             //Call method
-            Help();
+            Help(player);
         }
         else
         {
@@ -71,11 +71,11 @@ public class Player
         }
     }
 
-    static public void Help()
+    void Help(Player player)
     {
         //show what kind of commands/actions the user can perform        
         Console.WriteLine("List of possible actions to perform: ");
-        Console.WriteLine($"{look}, {inv}, {get}, {use}, {north}, {south}, {east}, {west} \n");
+        Console.WriteLine($"{player.look}, {player.inv}, {player.get}, {player.use}, {player.north}, {player.south}, {player.east}, {player.west} \n");
     }
     static public void DisplayExits(Room CurrentRoom)
     {
@@ -103,9 +103,10 @@ public class Player
         else
             Console.WriteLine($"{exitText} {exitsList}\n");
 
+
     }//End DisplayExits
 
-    static public void IterateItems(Player player)
+    void IterateItems(Player player)
     {
         const string youSeeText = "You see: ";
 
@@ -121,7 +122,7 @@ public class Player
         Console.WriteLine();
     }//End of IterateItems
 
-    static public void ShowInventory(Player player)
+    void ShowInventory(Player player)
     {
         const string ItemsText = "You have: ";
         const string noItemsText = "You have no items";
@@ -133,14 +134,14 @@ public class Player
         else
             Console.WriteLine(noItemsText);
 
-        for (int i = 0; i < player.Inventory.Count(); i++)
+        for (int i = 0; i < player.Inventory.Capacity; i++)
         {
             Console.WriteLine($"- {player.Inventory[i]}");
         }
         Console.WriteLine();
     }//End of ShowInventory
 
-    static public void UseItem(string playerAction, Player player)
+    void UseItem(string playerAction, Player player)
     {
         //Note: this is just a test. Will need to implement (somehow) some sort of Infocom type parser.
 
@@ -214,7 +215,7 @@ public class Player
         }//End of Puzzles loop
 
     }//End method
-    static public void GetItem(string playerAction, Player player)
+    void GetItem(string playerAction, Player player)
     {
         bool itemFound = false;
         bool missingItem = false;

@@ -2,15 +2,13 @@ namespace Adventure3.classes;
 
 public class Room
 {
-    public int allItems = 0;
     //Name of the room
     public string Name { get; set; }
 
     //Room description
     public string Description { get; set; }
 
-    //List of items (if any) in room
-    //public List<string> Items { get; set; }
+    //List of items (if any) in room    
     public Dictionary<string, Room> Items { get; set; }
 
     public Dictionary<string, string> Puzzles { get; set; }
@@ -41,7 +39,7 @@ public class Room
         NumberOfExits.Add(playerAction);
     }
 
-    public void InitializePuzzles()
+    void InitializePuzzles()
     {
         //Note: Prolly will have to create some sort of "puzzle" class instead
         Puzzles.Add("blaster", "Docking Bay");
